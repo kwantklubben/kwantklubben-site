@@ -1,8 +1,6 @@
 # kwantklubben-site
 
-The public site for **Kwant Klubben**, an independent student club at the University of Southern Denmark. Plain HTML/CSS/vanilla-JS — no framework, no toolchain, nothing to install. GitHub Pages assembles the pages with Jekyll (layouts and front matter only, no plugins), so pushing to `main` is the build. Live at `kwantklubben.com`.
-
-This repo is intentionally separate from the club's private research repo (`kwantklubben`, not public) and from the public project mirror (`kwantklubben-projects`). Nothing sensitive lives here — brand assets, marketing copy, and a link out to the application form.
+The public site for **Kwant Klubben**. Plain HTML/CSS/vanilla-JS. No framework, no toolchain, nothing to install. GitHub Pages assembles the pages with Jekyll (layouts and front matter only, no plugins). (Pushing to `main` is the build). Live at `kwantklubben.com`.
 
 ## Structure
 
@@ -37,7 +35,7 @@ the site with the same action Pages uses and fails the PR if anything is wrong.
 styles — 173 were lifted into named classes so a page reads as its words plus a
 class name, and `check-site.py` fails if one is added back.
 
-Nav is **About · Research · Partners**, plus a Contact button (a `mailto:`, not a page — there was nothing a contact page would hold that the mailto does not) and the Join button pointing straight at the application form.
+Nav is **About · Research · Partners**, plus a Contact button (`mailto:`) and the Join button (application form).
 
 ## The style
 
