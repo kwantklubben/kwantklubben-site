@@ -19,11 +19,10 @@ description: 'The Kwant Klubben project library. Everything the club chooses to 
 <section class="kk-band--paper" id="library">
   <div class="kk-section kk-section--list">
     <div class="kk-overline kk-overline--gap-lg">01 / Published</div>
-    <div class="kk-projects-grid">
-      <!-- The single placeholder. It must NOT imply a result exists. Replace it
-           with a real entry once the first project is approved for publication;
-           the fields match the project.json contract in the public mirror
-           (title, question, tags, status, summary, author, date, source). -->
+    <div class="kk-projects-grid" data-kk-research>
+            <!-- Static empty-state, kept as the honest no-projects placeholder.
+                 js/kk-research.js replaces it with the real approved projects when
+                 kwantklubben-public-research/projects.json has any. -->
       <div class="kk-card kk-card--pad-md kk-card--placeholder">
         <div class="kk-card__head">
           <h2 class="kk-card__t">Example Project</h2>

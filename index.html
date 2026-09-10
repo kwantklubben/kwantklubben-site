@@ -67,10 +67,10 @@ description: 'An independent student club at the University of Southern Denmark 
       </div>
     </div>
 
-    <div class="kk-projects-grid">
-      <!-- The single placeholder. It must NOT imply a result exists. Replace it
-           with a real entry once the first project is approved for publication;
-           the fields match the project.json contract in the public mirror. -->
+    <div class="kk-projects-grid" data-kk-research data-limit="3">
+            <!-- Static empty-state, kept as the honest no-projects placeholder.
+                 js/kk-research.js replaces it with the 3 most recent approved
+                 projects when kwantklubben-public-research/projects.json has any. -->
       <div class="kk-card kk-card--pad-md kk-card--placeholder">
         <div class="kk-card__head">
           <h3 class="kk-card__t">Example Project</h3>
