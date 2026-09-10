@@ -45,17 +45,16 @@ If you are adding to this site, use the existing components. Do not introduce a 
 
 ## The check
 
-There is no build step and no templating, so `HEAD-COMMON`, `NAV`, `FOOTER` and `SCRIPTS` are **literally duplicated** in all four pages. Every path inside them is root-relative precisely so they can be byte-identical.
+The site is a set of Jekyll *fragments*. Everything they share — `<head>`, nav,
+footer, scripts — lives **once** in `_layouts/default.html`, and GitHub Pages
+assembles the pages with Jekyll. There is no duplication to paste between pages:
+a change to the nav is a change to one file.
 
-**To change the nav, footer, head or scripts: edit `index.html`, paste into the other three, then run the check.**
-
-```
-python tools/check-site.py     # -> "ok: 4 blocks identical, invariants and CSS cascade rules hold across 4 pages"
-```
+`python tools/check-site.py`   # -> "ok: layout invariants, front matter and CSS cascade rules hold across 4 pages"
 
 It also runs in CI on every push and pull request (`.github/workflows/check.yml`).
 
-It is not a build step — it produces nothing and the site works without it. It exists because the July 2026 relaunch grew the site from three pages to five, hand-edited the old script's hardcoded three-file list, and shipped three pages whose font URL had lost `&family=Chewy`. So beyond comparing the blocks, it asserts things a diff cannot see, on every page it finds by glob:
+It is not a build step — it produces nothing and the site works without it. It exists because the July 2026 relaunch grew the site from three pages to five, shipped three pages whose font URL had lost `&family=Chewy`, and before the shared layout existed those pages duplicating head/nav/footer could drift apart. So it asserts the invariants a diff cannot see, on every page it finds by glob:
 
 | Invariant | Why it is checked |
 |---|---|
