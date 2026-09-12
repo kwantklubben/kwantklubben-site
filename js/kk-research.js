@@ -25,12 +25,14 @@
   var hosts = document.querySelectorAll('[data-kk-research]');
   if (!hosts.length) return;
 
-  // Map a project's status to the design-system verdict sticker. Only final or
-  // live outcomes get a stamp — "in review" is deliberately not here (busy
-  // work, not a verdict). Unknown statuses fall back to a neutral stamp.
+  // Map a project's status to the design-system verdict sticker. Driven by the
+  // repo's project.json `status` field. Only final or live outcomes get a stamp
+  // — "in review" is deliberately not here (busy work, not a verdict).
+  // Flagship=gold, survived=green, live/paper=blue, killed=coral.
   function stampClass(status) {
     var s = String(status || '').toLowerCase();
     if (s.indexOf('flagship') >= 0) return 'kk-stamp--flagship';
+    if (s.indexOf('surviv') >= 0) return 'kk-stamp--survived';
     if (s.indexOf('kill') >= 0) return 'kk-stamp--killed';
     if (s.indexOf('live') >= 0 || s.indexOf('paper') >= 0) return 'kk-stamp--live';
     return 'kk-stamp--neutral';
@@ -100,10 +102,7 @@
 
           var foot = document.createElement('div');
           foot.className = 'kk-card__foot';
-          var meta = [];
-          if (p.date) meta.push(p.date);
-          if (p.authors && p.authors.length) meta.push('@' + p.authors.join(', @'));
-          foot.textContent = meta.join(' · ');
+          if (p.date) foot.textContent = p.date;
           card.appendChild(foot);
 
           host.appendChild(card);
