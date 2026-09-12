@@ -34,8 +34,11 @@
       })
       .then(function (body) {
         var projects = Array.isArray(body && body.projects) ? body.projects : [];
-        // most recent first, stable for ties
+        // featured first, then most recent (stable for ties)
         projects.sort(function (a, b) {
+          var fa = !!(a && a.featured),
+            fb = !!(b && b.featured);
+          if (fa !== fb) return fa ? -1 : 1;
           var da = (a && a.date) || '',
             db = (b && b.date) || '';
           return da < db ? 1 : da > db ? -1 : 0;
@@ -114,7 +117,7 @@
             link.href = p.source;
             link.setAttribute('rel', 'noopener');
             link.target = '_blank';
-            link.textContent = 'View on GitHub →';
+            link.textContent = p.source_label || 'View on GitHub →';
             card.appendChild(link);
           }
 
