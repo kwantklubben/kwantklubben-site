@@ -504,6 +504,7 @@ def check_links():
     nav = LAYOUT.read_text(encoding="utf-8")
     failures = 0
     for href in re.findall(r'href="(/[^"#]*)"', nav):
+        href = href.split("?", 1)[0]  # strip cache-busting query string
         if "." in href.rsplit("/", 1)[-1]:      # an asset, not a page
             target = ROOT / href.strip("/")
         else:

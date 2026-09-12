@@ -43,7 +43,7 @@
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
 <!-- family=Chewy is loaded above; the 37vw KWANT wordmark depends on it. -->
 
-<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/css/styles.css?v={{ site.time | date: '%s' }}">
 <script>document.documentElement.classList.add('js')</script>
 <!-- /HEAD-COMMON -->
 </head>
@@ -125,10 +125,10 @@
 <!-- /FOOTER -->
 
 <!-- SCRIPTS -->
-<script src="/js/kk-nav.js" defer></script>
-<script src="/js/kk-ticker.js" defer></script>
-<script src="/js/kk-volsurface.js" defer></script>
-<script src="/js/kk-research.js" defer></script>
+<script src="/js/kk-nav.js?v={{ site.time | date: '%s' }}" defer></script>
+<script src="/js/kk-ticker.js?v={{ site.time | date: '%s' }}" defer></script>
+<script src="/js/kk-volsurface.js?v={{ site.time | date: '%s' }}" defer></script>
+<script src="/js/kk-research.js?v={{ site.time | date: '%s' }}" defer></script>
 <!-- /SCRIPTS -->
 </body>
 </html>
