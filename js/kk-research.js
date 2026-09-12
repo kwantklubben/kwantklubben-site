@@ -25,6 +25,17 @@
   var hosts = document.querySelectorAll('[data-kk-research]');
   if (!hosts.length) return;
 
+  // Map a project's status to the design-system verdict sticker. Only final or
+  // live outcomes get a stamp — "in review" is deliberately not here (busy
+  // work, not a verdict). Unknown statuses fall back to a neutral stamp.
+  function stampClass(status) {
+    var s = String(status || '').toLowerCase();
+    if (s.indexOf('flagship') >= 0) return 'kk-stamp--flagship';
+    if (s.indexOf('kill') >= 0) return 'kk-stamp--killed';
+    if (s.indexOf('live') >= 0 || s.indexOf('paper') >= 0) return 'kk-stamp--live';
+    return 'kk-stamp--neutral';
+  }
+
   function renderGrid(host) {
     var limit = parseInt(host.getAttribute('data-limit') || '', 10);
     fetch(INDEX_URL, { headers: { Accept: 'application/json' } })
@@ -56,8 +67,15 @@
         host.innerHTML = '';
         projects.forEach(function (p) {
           if (!p || !p.title) return;
-          var card = document.createElement('div');
-          card.className = 'kk-card kk-card--pad-md';
+
+          // The whole card is the link — there is no separate
+          // "View on GitHub" row. Featured/research entries link to
+          // p.source (the atlas's live site, research repos, etc.).
+          var card = document.createElement('a');
+          card.className = 'kk-card kk-card--pad-md kk-card--hover kk-card--link';
+          card.href = p.source || '#';
+          card.setAttribute('rel', 'noopener');
+          card.target = '_blank';
 
           var head = document.createElement('div');
           head.className = 'kk-card__head';
@@ -66,23 +84,13 @@
           title.textContent = p.title;
           head.appendChild(title);
           if (p.status) {
-            var badge = document.createElement('span');
-            badge.className =
-              'kk-badge ' +
-              (String(p.status).toLowerCase().indexOf('in progress') >= 0
-                ? 'kk-badge--neutral'
-                : 'kk-badge--ok');
-            badge.textContent = p.status;
-            head.appendChild(badge);
+            var sticker = document.createElement('span');
+            sticker.className = 'kk-stamp kk-stamp--sm ' + stampClass(p.status);
+            sticker.textContent = p.status;
+            head.appendChild(sticker);
           }
           card.appendChild(head);
 
-          if (p.question) {
-            var q = document.createElement('p');
-            q.className = 'kk-card__q';
-            q.textContent = p.question;
-            card.appendChild(q);
-          }
           if (p.summary) {
             var sum = document.createElement('p');
             sum.className = 'kk-card__d';
@@ -94,32 +102,9 @@
           foot.className = 'kk-card__foot';
           var meta = [];
           if (p.date) meta.push(p.date);
-          if (p.authors && p.authors.length) meta.push(p.authors.join(', '));
+          if (p.authors && p.authors.length) meta.push('@' + p.authors.join(', @'));
           foot.textContent = meta.join(' · ');
           card.appendChild(foot);
-
-          // tag row
-          if (p.tags && p.tags.length) {
-            var tags = document.createElement('div');
-            tags.className = 'kk-tag-row';
-            (Array.isArray(p.tags) ? p.tags : []).forEach(function (t) {
-              var tag = document.createElement('span');
-              tag.className = 'kk-tag';
-              tag.textContent = t;
-              tags.appendChild(tag);
-            });
-            card.appendChild(tags);
-          }
-
-          if (p.source) {
-            var link = document.createElement('a');
-            link.className = 'kk-card__link';
-            link.href = p.source;
-            link.setAttribute('rel', 'noopener');
-            link.target = '_blank';
-            link.textContent = p.source_label || 'View on GitHub →';
-            card.appendChild(link);
-          }
 
           host.appendChild(card);
         });

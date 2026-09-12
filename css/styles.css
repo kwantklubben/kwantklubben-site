@@ -308,11 +308,13 @@ code, kbd, samp { font-family: var(--font-mono); }
    deleting it would only mean digging it back out of git later.
 
    ONE EXCEPTION, and it is not a style preference:
-   .kk-badge--survived / --killed and .kk-stamp--survived / --killed must NOT be
-   used on this site. "Survived / killed" verdict cards are excluded by the
-   club's brief — the klub does not pass verdicts on research it has not
-   published, and a placeholder wearing one would be a claim it cannot support.
-   Reach for .kk-badge--neutral instead.
+   .kk-badge--survived / --killed were historically excluded because the klub did
+   not pass verdicts on unpublished research and a placeholder wearing one would
+   be a claim it cannot support. That changed once real projects landed: published
+   project cards now use .kk-stamp--killed / --live / --flagship stickers (see
+   js/kk-research.js), since a published outcome is a verdict the repo can back.
+   The badge variants and .kk-stamp--survived / --review remain unused — only the
+   LIVE / KILLED / FLAGSHIP verdict stickers are wired to the project cards.
    =========================================================================== */
 
 /* --- source: components/core/Button.jsx --- */
@@ -423,6 +425,17 @@ code, kbd, samp { font-family: var(--font-mono); }
 .kk-stamp--killed{ color:var(--coral-600); background:color-mix(in srgb, var(--coral-300) 50%, transparent); }
 .kk-stamp--review{ color:var(--gold-600); background:color-mix(in srgb, var(--gold-300) 55%, transparent); }
 .kk-stamp--paper{ color:var(--blue-600); background:color-mix(in srgb, var(--blue-300) 45%, transparent); }
+/* Verdict stickers used on published project cards. Only final or live outcomes
+   get a stamp — "in review" is deliberately absent (busy work, not a verdict). */
+.kk-stamp--live{ color:var(--blue-600); background:color-mix(in srgb, var(--blue-300) 45%, transparent); }
+.kk-stamp--flagship{ color:var(--gold-600); background:color-mix(in srgb, var(--gold-300) 55%, transparent); }
+.kk-stamp--neutral{ color:var(--ink-700); background:color-mix(in srgb, var(--paper-200) 60%, transparent); border-color:var(--paper-300); }
+
+/* A project card that is itself a link. The card wraps every element, so the
+   anchor must be block/flex with no underline and its footer pinned to the
+   bottom regardless of the summary's length — otherwise the author/date line
+   floats after a short summary instead of sitting along the card's edge. */
+a.kk-card--link{ display:block; text-decoration:none; }
 
 /* ===========================================================================
    Site-specific layout — new for this static port (not in the original
