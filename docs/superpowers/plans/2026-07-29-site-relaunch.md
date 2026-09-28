@@ -514,7 +514,7 @@ No Sharpe ratios, no survived/killed stamps, no project statistics.
 
 **Files:** Create `partners/index.html`
 
-Collaboration, speakers, mentorship, workshops, opportunities, co-designed events, visibility to ambitious quantitative-finance students. Written from the perspective of an active membership community, with **no specific promise the club cannot currently fulfil** — no audience numbers, no recruiting-pipeline claims, no named partners. CTA is `hello@kwantklubben.com`.
+Collaboration, speakers, mentorship, workshops, opportunities, co-designed events, visibility to ambitious quantitative-finance students. Written from the perspective of an active membership community, with **no specific promise the club cannot currently fulfil** — no audience numbers, no recruiting-pipeline claims, no named partners. CTA is `kwantklubben@org.sdu.dk`.
 
 - [ ] **Step 1: Write the page**
 - [ ] **Step 2:** Run `python tools/check-site.py` → Expected: still failing, on `contact/index.html` alone
@@ -526,7 +526,7 @@ Collaboration, speakers, mentorship, workshops, opportunities, co-designed event
 
 **Files:** Create `contact/index.html`
 
-`hello@kwantklubben.com` as the primary CTA, LinkedIn secondary. No form, no backend, no personal-data collection.
+`kwantklubben@org.sdu.dk` as the primary CTA, LinkedIn secondary. No form, no backend, no personal-data collection.
 
 - [ ] **Step 1: Write the page**
 
@@ -562,7 +562,7 @@ Nothing here is optional, and none of it can be claimed without the output in fr
 - [ ] **Step 3:** At **375×812**, repeat. Confirm the ☰ drawer opens and closes, and that `KWANT` sits **below** the footer text rather than behind it — this is the specific regression from last time.
 - [ ] **Step 4:** On `/`, confirm the surface responds to pointer movement and to a click, and that the readout numbers change.
 - [ ] **Step 5:** Enable `prefers-reduced-motion: reduce` in DevTools rendering, reload `/`. Confirm the surface renders one static frame and the CPU profile shows no rAF loop.
-- [ ] **Step 6:** Confirm every nav link and both CTAs resolve — the form link opens `https://forms.gle/P5Aw4ka85QUZiUmZ9`, `hello@kwantklubben.com` opens a mail client, `/sponsors/` lands on `/partners/`.
+- [ ] **Step 6:** Confirm every nav link and both CTAs resolve — the form link opens `https://forms.gle/P5Aw4ka85QUZiUmZ9`, `kwantklubben@org.sdu.dk` opens a mail client, `/sponsors/` lands on `/partners/`.
 - [ ] **Step 7:** Run `python tools/check-site.py` one final time → Expected: `ok: 4 blocks identical and invariants hold across 5 pages`
 
 ---
