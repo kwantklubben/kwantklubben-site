@@ -990,10 +990,9 @@ footer{ background:var(--ink-900); border-top:2px solid var(--ink-700); color:va
   font-weight: 700;
   font-size: 28px;
   color: var(--ink-400);
-  opacity: 0.5;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  transition: opacity var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+  transition: color var(--dur-fast) var(--ease-out);
   cursor: default;
 }
 
