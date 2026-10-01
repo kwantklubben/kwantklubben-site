@@ -922,7 +922,7 @@ footer{ background:var(--ink-900); border-top:2px solid var(--ink-700); color:va
 .kk-volsurface canvas{ display:block; width:100%; height:100%; }
 
 /* --- the how-it-works band --- */
-.kk-band--lime-flush{ background:var(--lime-500); border-bottom:2px solid var(--ink-800); }
+.kk-band--lime-flush{ background:var(--lime-500); border-top:2px solid var(--ink-800); border-bottom:2px solid var(--ink-800); }
 .kk-loop__title{ font:var(--weight-bold) 40px/1.05 var(--font-display); letter-spacing:-.02em; color:var(--ink-900); margin:0 0 36px; max-width:18ch; }
 .kk-section--loop{ padding-top:56px; padding-bottom:56px; }
 
