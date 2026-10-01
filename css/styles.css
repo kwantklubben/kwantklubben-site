@@ -1008,6 +1008,8 @@ footer{ background:var(--ink-900); border-top:2px solid var(--ink-700); color:va
    keep the text version's opacity (0.5) mute so they read as a subdued wall,
    and drop to full strength on hover via the existing .kk-partner-logo:hover. */
 .kk-ticker-wrap--thin { padding: 20px 0 24px; }
+/* Compact icon marks sit tighter than the full wordmarks did. */
+.kk-ticker-wrap--thin .kk-ticker { gap: 64px; padding-right: 64px; }
 .kk-partner-logo img {
   height: 40px;
   width: auto;
