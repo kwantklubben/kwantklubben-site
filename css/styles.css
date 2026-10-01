@@ -1001,3 +1001,22 @@ footer{ background:var(--ink-900); border-top:2px solid var(--ink-700); color:va
   opacity: 1;
   color: var(--ink-900);
 }
+
+/* --- front-page company strip (relocated from partners) ---
+   The marquee's 48px top padding was sized for the partners page; as a thin
+   strip between the hero and "How we work" it needs far less. The logo images
+   keep the text version's opacity (0.5) mute so they read as a subdued wall,
+   and drop to full strength on hover via the existing .kk-partner-logo:hover. */
+.kk-ticker-wrap--thin { padding: 20px 0 24px; }
+.kk-partner-logo img {
+  height: 40px;
+  width: auto;
+  max-width: 170px;
+  display: block;
+  filter: grayscale(100%);
+  transition: filter var(--dur-fast) var(--ease-out);
+}
+.kk-partner-logo:hover img { filter: grayscale(0%); }
+
+/* Logo on a partner card (partners page) — larger, full colour. */
+.kk-partner-card__logo { height: 48px; width: auto; max-width: 200px; display: block; margin-bottom: 16px; }

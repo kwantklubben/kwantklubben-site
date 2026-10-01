@@ -9,15 +9,18 @@ _layouts/default.html the <head>, nav, footer and scripts every page shares.
                       ONE copy — GitHub Pages assembles the pages with Jekyll.
 _config.yml           build config: what stays out of the published site.
 
-index.html            landing — volatility surface, the loop, research teaser, join
+index.html            landing — volatility surface, the loop, companies strip, join
 about/index.html      what the klub is, the process in full, AI, joining
+events/index.html     the event library — upcoming then past, from data/events.json
 research/index.html   the library, how publishing works, what counts
-partners/index.html   collaboration, talks, mentorship, co-designed events
+partners/index.html   collaboration, talks, mentorship, categorized partners
 sponsors/index.html   redirect stub -> /partners/  (the old URL is on LinkedIn)
 
+data/events.json      the single source of truth for club events (name, date, time, location)
 css/styles.css        the original brand stylesheet (tokens + component idiom),
                       a short relaunch section, then the page-furniture classes
 js/kk-nav.js          the mobile drawer. Drives the `hidden` ATTRIBUTE, not a class.
+js/kk-events.js       renders data/events.json into /events and drives the next-event banner
 assets/               logos, favicon set
 tools/check-site.py   the drift + invariant check. Read the next section.
 tools/serve-preview.py local preview with the Jekyll layout applied, for when
@@ -35,7 +38,7 @@ the site with the same action Pages uses and fails the PR if anything is wrong.
 styles — 173 were lifted into named classes so a page reads as its words plus a
 class name, and `check-site.py` fails if one is added back.
 
-Nav is **About · Research · Partners**, plus a Contact button (`mailto:`) and the Join button (application form).
+Nav is **About · Events · Research · Partners**, plus a Contact button (`mailto:`) and the Join button (application form).
 
 ## The style
 

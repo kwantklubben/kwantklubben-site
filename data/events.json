@@ -1,0 +1,13 @@
+{
+  "events": [
+    {
+      "id": "intro",
+      "name": "Intro event",
+      "summary": "Come see if this is your thing. An introduction to Kwant Klubben, the student quantitative finance club at SDU.",
+      "starts": "2026-09-24T16:30:00+02:00",
+      "ends": "2026-09-24T18:00:00+02:00",
+      "location": "U313, University of Southern Denmark",
+      "link": "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Kwant%20Klubben%20intro%20event&dates=20260924T143000Z%2F20260924T160000Z&details=Come%20see%20if%20this%20is%20your%20thing.%20An%20introduction%20to%20Kwant%20Klubben%2C%20the%20student%20quantitative%20finance%20club%20at%20SDU.&location=U313%2C%20University%20of%20Southern%20Denmark"
+    }
+  ]
+}
