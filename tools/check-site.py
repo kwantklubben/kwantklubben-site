@@ -49,7 +49,6 @@ LAYOUT = ROOT / "_layouts" / "default.html"
 REDIRECT_MARKER = re.compile(r"<!--\s*REDIRECT\b")
 SKIPPED = []
 
-FORM_URL = "https://forms.gle/P5Aw4ka85QUZiUmZ9"
 
 
 def _is_redirect(path):
@@ -159,8 +158,11 @@ def check_layout_invariants():
     # The wordmark is set in Chewy at 37vw with a -3.3vw nudge tuned to Chewy's
     # own internal leading. Without the font it falls back to system cursive and
     # clips out of its box. This is the 2026-07-29 bug.
-    if "family=Chewy" not in text:
-        print("FAIL _layouts/default.html: font URL is missing &family=Chewy — "
+    fonts_css = ROOT / "assets" / "fonts" / "fonts.css"
+    if "/assets/fonts/fonts.css" not in text or not fonts_css.exists() or \
+            not re.search(r"font-family:\s*'Chewy'", fonts_css.read_text(encoding="utf-8")):
+        print("FAIL: the Chewy face is not loaded (layout must link "
+              "/assets/fonts/fonts.css, and fonts.css must declare 'Chewy') — "
               "the KWANT wordmark falls back to system cursive")
         failures += 1
 
@@ -221,13 +223,15 @@ def check_layout_invariants():
 
     # og:image and canonical must be ABSOLUTE. A crawler fetching the card is not
     # on the site, so a root-relative path resolves against the wrong host.
-    for m in re.finditer(r'(?:content|href)="(/[^"]*)"', text):
-        val = m.group(1)
-        line = text[:m.start()].count("\n") + 1
-        near = text[max(0, m.start() - 220):m.start()]
-        if re.search(r'(og:image|og:url|twitter:image|rel="canonical")', near):
+    for m in re.finditer(r'<(?:meta|link)\b[^>]*>', text):
+        tag = m.group(0)
+        if not re.search(r'(og:image|og:url|twitter:image|rel="canonical")', tag):
+            continue
+        val = re.search(r'(?:content|href)="([^"]*)"', tag)
+        if val and val.group(1).startswith("/"):
+            line = text[:m.start()].count("\n") + 1
             print("FAIL _layouts/default.html:%d: %s is root-relative. Sharing "
-                  "metadata needs {{ site.url }} in front of it." % (line, val))
+                  "metadata needs {{ site.url }} in front of it." % (line, val.group(1)))
             failures += 1
     return failures
 
@@ -270,32 +274,43 @@ def check_discoverability():
     return failures
 
 
-def check_form_links(sources):
-    """The application link, everywhere it appears.
+SITE_LINKS = {
+    # config key     -> a pattern that means someone hardcoded it instead
+    "join_url":      r"https?://(?:forms\.gle|docs\.google\.com/forms)/",
+    "discord_url":   r"https?://discord\.(?:gg|com/invite)/",
+    "contact_email": r"[\w.+-]+@org\.sdu\.dk",
+}
 
-    A stale or mistyped application link is the single most expensive copy bug
-    on the site — every poster and every LinkedIn post points at it.
 
-    Matches any application-link SHAPE, not just already-correct ones. The first
-    version only compared strings that already looked like `https://forms.gle/`,
-    so an http:// link, a docs.google.com/forms link, or a silently deleted CTA
-    all passed.
+def check_site_links(sources):
+    """The join form, Discord invite and contact address are set ONCE, in
+    _config.yml, and every page reads them as {{ site.join_url }} etc.
+
+    A stale application link is the single most expensive copy bug on the site
+    — every poster and LinkedIn post points at it. With one copy it cannot
+    drift; this check keeps it that way by failing on any hardcoded copy.
     """
     failures = 0
+    cfg = (ROOT / "_config.yml").read_text(encoding="utf-8")
+    for key in SITE_LINKS:
+        if not re.search(r"^%s:\s*\S+" % key, cfg, re.M):
+            print("FAIL _config.yml: `%s` is not set" % key)
+            failures += 1
     texts = dict(sources)
     texts[LAYOUT] = LAYOUT.read_text(encoding="utf-8")
-    total = 0
+    for inc in sorted((ROOT / "_includes").glob("*.html")):
+        texts[inc] = inc.read_text(encoding="utf-8")
+    uses_join = False
     for path, text in texts.items():
-        links = re.findall(
-            r'https?://(?:forms\.gle|docs\.google\.com/forms)[^"\s<]*', text)
-        total += len(links)
-        for found in links:
-            if found != FORM_URL:
-                print("FAIL %s: application link %s is not %s"
-                      % (rel(path), found, FORM_URL))
+        uses_join |= "site.join_url" in text
+        for key, pattern in SITE_LINKS.items():
+            for m in re.finditer(pattern, text):
+                line = text[:m.start()].count("\n") + 1
+                print("FAIL %s:%d: hardcoded %s. Use {{ site.%s }} — it is set "
+                      "once in _config.yml." % (rel(path), line, m.group(0), key))
                 failures += 1
-    if total == 0:
-        print("FAIL: no application link anywhere on the site")
+    if not uses_join:
+        print("FAIL: nothing on the site links to {{ site.join_url }}")
         failures += 1
     return failures
 
@@ -459,6 +474,9 @@ def check_assets(sources):
         haystack += sources[path]
     for js in sorted((ROOT / "js").glob("*.js")):
         haystack += js.read_text(encoding="utf-8")
+    # Logos are named in _data/partners.yml and rendered by _includes/.
+    for extra in sorted(ROOT.glob("_data/*.yml")) + sorted(ROOT.glob("_includes/*")):
+        haystack += extra.read_text(encoding="utf-8")
 
     failures = 0
     for path in sorted(assets.rglob("*")):
@@ -469,6 +487,78 @@ def check_assets(sources):
                   "wire it up or delete it — a public repo should not carry "
                   "files no page asks for." % rel(path))
             failures += 1
+    return failures
+
+
+def check_data():
+    """_data/*.yml is what members edit. A typo there should fail CI with a
+    message that says which entry and which field, not a blank card.
+
+    Needs PyYAML (CI installs it). Without it the check is skipped locally —
+    the Jekyll build in CI still parses the files either way.
+    """
+    try:
+        import yaml
+    except ImportError:
+        print("note: PyYAML not installed, _data/*.yml not validated "
+              "(pip install pyyaml, or let CI do it)")
+        return 0
+
+    failures = 0
+    def fail(file, i, msg):
+        nonlocal failures
+        print("FAIL _data/%s, entry %d: %s" % (file, i + 1, msg))
+        failures += 1
+
+    def load(name):
+        with open(ROOT / "_data" / name, encoding="utf-8") as fh:
+            return yaml.safe_load(fh) or []
+
+    def is_date(v):
+        return re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(v)) is not None
+
+    hhmm = re.compile(r"([01]\d|2[0-3]):[0-5]\d")
+    types = load("event_types.yml")
+    for key, t in types.items():
+        if t.get("colour") not in ("lime", "blue", "gold", "coral"):
+            print("FAIL _data/event_types.yml: `%s` colour must be lime, blue, "
+                  "gold or coral" % key)
+            failures += 1
+
+    for i, ev in enumerate(load("events.yml")):
+        for field in ("name", "type", "date", "start", "end", "location"):
+            if not ev.get(field):
+                fail("events.yml", i, "`%s` is missing (%s)" % (field, ev.get("name", "?")))
+        if ev.get("type") and ev["type"] not in types:
+            fail("events.yml", i, "type `%s` is not one of: %s"
+                 % (ev["type"], ", ".join(types)))
+        if ev.get("date") and not is_date(ev["date"]):
+            fail("events.yml", i, "date `%s` is not YYYY-MM-DD" % ev["date"])
+        for field in ("start", "end"):
+            if ev.get(field) and not hhmm.fullmatch(str(ev[field])):
+                fail("events.yml", i, "%s `%s` is not HH:MM in quotes, e.g. "
+                     "\"16:00\"" % (field, ev[field]))
+        if hhmm.fullmatch(str(ev.get("start", ""))) and \
+                hhmm.fullmatch(str(ev.get("end", ""))) and str(ev["end"]) <= str(ev["start"]):
+            fail("events.yml", i, "ends before it starts")
+
+    for i, r in enumerate(load("research.yml")):
+        for field in ("title", "date", "note"):
+            if not r.get(field):
+                fail("research.yml", i, "`%s` is missing" % field)
+        if r.get("date") and not is_date(r["date"]):
+            fail("research.yml", i, "date `%s` is not YYYY-MM-DD" % r["date"])
+        if r.get("pdf") and not (ROOT / "research" / "papers" / r["pdf"]).exists():
+            fail("research.yml", i, "pdf `%s` is not in research/papers/" % r["pdf"])
+
+    for i, p in enumerate(load("partners.yml")):
+        for field in ("name", "tier", "url", "logo"):
+            if not p.get(field):
+                fail("partners.yml", i, "`%s` is missing" % field)
+        if p.get("tier") not in ("principal", "partner", "supporter"):
+            fail("partners.yml", i, "tier must be principal, partner or supporter")
+        if p.get("logo") and not (ROOT / "assets" / "logos" / p["logo"]).exists():
+            fail("partners.yml", i, "logo `%s` is not in assets/logos/" % p["logo"])
     return failures
 
 
@@ -531,12 +621,13 @@ def main():
     failures = (build
                 + check_front_matter(sources)
                 + check_layout_invariants()
-                + check_form_links(sources)
+                + check_site_links(sources)
                 + check_markers(sources)
                 + check_inline_styles(sources)
                 + check_css()
                 + check_discoverability()
                 + check_assets(sources)
+                + check_data()
                 + check_no_stray_markdown()
                 + check_links())
 

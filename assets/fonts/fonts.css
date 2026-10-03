@@ -1,7 +1,7 @@
 /* Kwant Klubben — site webfonts (vendored locally, no external dependency). */
 /* Source: Google Fonts — Space Grotesk + Space Mono (SIL OFL) and Chewy (OFL). */
 /* Loaded locally so kwantklubben.com renders fully offline / CDN-independent. */
-/* Chewy is the footer wordmark face — keep it; check-site.py asserts family=Chewy. */
+/* Chewy is the footer wordmark face — keep it; check-site.py asserts this face exists. */
 
 @font-face {
   font-family: 'Chewy';

@@ -1,108 +1,61 @@
 # kwantklubben-site
 
-The public site for **Kwant Klubben**. Plain HTML/CSS/vanilla-JS. No framework, no toolchain, nothing to install. GitHub Pages assembles the pages with Jekyll (layouts and front matter only, no plugins). (Pushing to `main` is the build). Live at `kwantklubben.com`.
+The public site for **Kwant Klubben**, live at `kwantklubben.com`. Plain
+HTML/CSS/vanilla JS. GitHub Pages builds it with Jekyll (layouts, includes and
+data files only, no plugins), so pushing to `main` is the deploy.
+
+**Editing anything? Read [EDITING.md](EDITING.md).** Adding an event, publishing
+a project or adding a partner is one YAML block in one file.
 
 ## Structure
 
 ```
-_layouts/default.html the <head>, nav, footer and scripts every page shares.
-                      ONE copy — GitHub Pages assembles the pages with Jekyll.
-_config.yml           build config: what stays out of the published site.
+_config.yml           build config + the site-wide links (join form, Discord, email)
+_data/events.yml      every club event          -> /events, the banner on every page
+_data/event_types.yml event types and their colours
+_data/research.yml    every published project   -> /research, homepage teaser
+_data/partners.yml    partners and their tier   -> /partners, homepage logo strip
+_layouts/default.html head, event banner, nav, footer: the only copy
+_includes/            join band, event/research/partner cards, social icons
 
-index.html            landing — volatility surface, the loop, companies strip, join
-about/index.html      what the klub is, the process in full, AI, joining
-events/index.html     the event library — upcoming then past, from data/events.json
-research/index.html   the library, how publishing works, what counts
-partners/index.html   collaboration, talks, mentorship, categorized partners
-sponsors/index.html   redirect stub -> /partners/  (the old URL is on LinkedIn)
+index.html            landing: volatility surface, partner strip, the loop, recent projects
+about/ events/ research/ partners/   one index.html each
+sponsors/index.html   redirect stub -> /partners/ (the old URL is on LinkedIn)
+research/papers/      research PDFs, linked from _data/research.yml
 
-data/events.json      the single source of truth for club events (name, date, time, location)
-css/styles.css        the original brand stylesheet (tokens + component idiom),
-                      a short relaunch section, then the page-furniture classes
-js/kk-nav.js          the mobile drawer. Drives the `hidden` ATTRIBUTE, not a class.
-js/kk-events.js       renders data/events.json into /events and drives the next-event banner
-assets/               logos, favicon set
-tools/check-site.py   the drift + invariant check. Read the next section.
-tools/serve-preview.py local preview with the Jekyll layout applied, for when
-                      you have no Ruby. Read the next section.
-
-EDITING.md            how to change the site from github.com. Start there.
+css/styles.css        the brand stylesheet (tokens + components)
+js/kk-events.js       greys out past events and fills the next-event banner
+js/kk-nav.js          mobile drawer (drives the `hidden` attribute, not a class)
+js/kk-ticker.js       the partner logo strip
+js/kk-volsurface.js   the hero's implied-volatility surface
+tools/check-site.py   invariant + data checks, run in CI
+tools/preview.sh      local preview with real Jekyll (optional)
 ```
 
-**Local preview.** Opening the files directly no longer works: pages are Jekyll
-fragments, so a plain static server shows the raw `---` header and no nav. Run
-`python tools/serve-preview.py`, install Jekyll, or push to a branch — CI builds
-the site with the same action Pages uses and fails the PR if anything is wrong.
-
-**Editing the copy?** See [EDITING.md](EDITING.md). The pages carry no inline
-styles — 173 were lifted into named classes so a page reads as its words plus a
-class name, and `check-site.py` fails if one is added back.
-
-Nav is **About · Events · Research · Partners**, plus a Contact button (`mailto:`) and the Join button (application form).
-
-## The style
-
-The chunky idiom **is** the brand: 2px ink borders, hard `4px 4px 0` pop shadows, lime section fills, badges, gridpaper. `css/styles.css` is the original stylesheet, unchanged, with a clearly-marked section appended at the bottom for the few things the relaunch actually needed — the hero chart, a three-column variant of the divided grid, the footer's second link group, a skip link, and one brand fix (the token layer's `--focus-ring` was `--blue-500`; the brand has no blue in it).
-
-If you are adding to this site, use the existing components. Do not introduce a second visual system.
+There is no external data dependency: everything the site shows lives in this
+repo, so nothing can break it from outside.
 
 ## The check
 
-The site is a set of Jekyll *fragments*. Everything they share — `<head>`, nav,
-footer, scripts — lives **once** in `_layouts/default.html`, and GitHub Pages
-assembles the pages with Jekyll. There is no duplication to paste between pages:
-a change to the nav is a change to one file.
+`python tools/check-site.py` runs in CI on every push (`.github/workflows/check.yml`),
+next to a real Jekyll build whose output is asserted (every page wrapped in the
+layout, no unrendered Liquid, data rendered into cards). It exists because the
+July 2026 relaunch shipped bugs no diff showed. It checks:
 
-`python tools/check-site.py`   # -> "ok: layout invariants, front matter and CSS cascade rules hold across 4 pages"
-
-It also runs in CI on every push and pull request (`.github/workflows/check.yml`).
-
-It is not a build step — it produces nothing and the site works without it. It exists because the July 2026 relaunch grew the site from three pages to five, shipped three pages whose font URL had lost `&family=Chewy`, and before the shared layout existed those pages duplicating head/nav/footer could drift apart. So it asserts the invariants a diff cannot see, on every page it finds by glob:
-
-| Invariant | Why it is checked |
+| Invariant | Why |
 |---|---|
-| `&family=Chewy` in the font URL | The footer wordmark is Chewy at 37vw with a `-3.3vw` nudge tuned to its metrics. Without the font it falls back to system cursive and clips out of its own box. |
-| `.kk-footer-word` present | Same wordmark, absent entirely. |
-| No class on the `<footer>` element | `footer{display:block}` (0,0,1) is what undoes the wordmark overlay on phones. Any class selector out-specifies it. |
-| `#kk-nav-panel` ships with `hidden` | Checked at attribute position, not as a substring — `class="… hidden"` would satisfy a substring test while being exactly the class-for-attribute swap this catches. `kk-nav.js` is deferred and owns that attribute; without it the drawer renders **open** on a cold mobile cache. |
-| An application link exists and matches | Any `forms.gle` **or** `docs.google.com/forms` link, over http or https, must equal the one true form URL — and at least one must be present. It is on every poster. |
-| No `TODO(content)` / `REPLACE_ME` | Placeholders must not reach production. |
-| Every root-relative nav `href` resolves | A nav pointing at a directory that does not exist. |
-| The CSS cascade rules | No bare `.kk-footer` class selector; the mobile `footer{display:block}` override still present; no `display` declared inside `.js .kk-nav__panel`. |
+| `_data/*.yml` entries are complete and well-formed | Members edit these on github.com; a typo must fail with a message, not render a blank card. |
+| Join form / Discord / email only in `_config.yml` | One copy cannot drift. Every poster points at the join link. |
+| The Chewy face is loaded | The 37vw footer wordmark is tuned to its metrics and clips without it. |
+| No class on `<footer>` | `footer{display:block}` (0,0,1) undoes the wordmark overlay on phones; any class out-specifies it. |
+| `#kk-nav-panel` ships with the `hidden` attribute | `kk-nav.js` is deferred; without it the drawer renders open on a cold mobile cache. |
+| No inline `style=`, balanced CSS braces | 173 inline styles were lifted into classes; a stray `}` silently drops the next rule. |
+| Every asset is used; sitemap lists every page | No dead files in a public repo; the hand-written sitemap cannot fall behind. |
 
-Pages opt out by containing a `REDIRECT` marker in a comment near the top **and** actually being a redirect — that is how `sponsors/index.html` is excluded. Skipped pages are printed, so an opt-out is visible in the CI log.
-
-### Two rules the CSS depends on
-
-Both of these broke in July 2026 and both are cheap to break again:
-
-- **No class on the `<footer>` element.** The mobile override that undoes the wordmark overlay is `footer{display:block}`. Any class selector out-specifies it and strands the letters behind the footer text on phones.
-- **The nav drawer is driven by the `hidden` attribute**, never by an `.is-open` class. `css/styles.css` has a long comment explaining why declaring `display` in the mobile `.kk-nav__panel` block makes `hidden` inert. Read it before touching that block.
-
-## Local preview
-
-**Always serve it. Never open `index.html` with `file://`.**
-
-```
-python tools/serve-preview.py     # -> http://localhost:4000
-```
-
-Paths are root-relative, so under `file://` they resolve against your filesystem root — the page renders as unstyled HTML with broken images. That is the expected result of double-clicking the file, not a broken site.
-
-`python -m http.server` fixes the paths but not the pages: every page here is a
-Jekyll *fragment*, so a plain static server serves the raw `---` front matter as
-visible text with no `<head>`, no nav and no footer. `serve-preview.py` applies
-`_layouts/default.html` the way Pages does and sends no-cache headers, so a reload
-always shows the file on disk.
-
-It implements exactly the four substitutions this site uses — `page.title`,
-`page.description`, `page.url`, `site.url`, plus `{{ content }}` — and nothing
-else. It is a **preview, not a build**: it writes no files, and CI still builds
-with the real `jekyll-build-pages` action. If a future page needs a Liquid tag
-beyond those four, this renders it literally and the CI job's "unrendered Liquid"
-assertion is what catches it. Installing Ruby and running `jekyll serve` remains
-the higher-fidelity option.
+`sponsors/index.html` opts out with a `REDIRECT` marker comment; skipped pages
+are printed in the CI log.
 
 ## Deploy
 
-Push to `main`. GitHub Pages deploys from `main` / root. The custom domain is set in repo Settings → Pages, which manages the `CNAME` file automatically.
+Push to `main`. GitHub Pages deploys from `main` / root; the custom domain is
+set in repo Settings → Pages.

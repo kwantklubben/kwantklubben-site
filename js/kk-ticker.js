@@ -23,7 +23,12 @@
   if (!track) return;
 
   // Two identical halves -> a seamless wrap measured across exactly one copy.
-  track.innerHTML += track.innerHTML;
+  // The copies are decoration: screen readers hear each company once.
+  Array.prototype.slice.call(track.children).forEach(function (el) {
+    var copy = el.cloneNode(true);
+    copy.setAttribute('aria-hidden', 'true');
+    track.appendChild(copy);
+  });
 
   var NORMAL = 14; // seconds for one lap at full speed
   var SLOW = 4;    // hover runs at 1/4 speed (75% slower)

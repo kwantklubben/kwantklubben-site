@@ -1017,3 +1017,68 @@ footer{ background:var(--ink-900); border-top:2px solid var(--ink-700); color:va
 
 /* Logo on a partner card (partners page) — larger, full colour. */
 .kk-partner-card__logo { height: 48px; width: auto; display: block; margin-bottom: 16px; }
+
+/* ===========================================================================
+   October 2026: data-driven events, research and partner tiers.
+   Everything below is for markup rendered from _data/*.yml.
+   =========================================================================== */
+
+/* Section labels that are real headings (Upcoming / Past) keep the overline look. */
+h2.kk-overline{ margin-top:0; font-weight:400; }
+.kk-overline.kk-overline--gap-top{ margin-top:56px; }
+
+/* --- Events -------------------------------------------------------------
+   Each event type gets one brand colour (set in _data/event_types.yml).
+   The colour shows as the type pill and a 6px stripe down the card's left. */
+.kk-event{ --ev-bg:var(--paper-200); --ev-fg:var(--ink-700); --ev-edge:var(--paper-400);
+  border-left:6px solid var(--ev-edge); display:flex; flex-direction:column; gap:4px; }
+.kk-event--lime { --ev-bg:var(--lime-300);  --ev-fg:var(--lime-800); --ev-edge:var(--lime-500); }
+.kk-event--blue { --ev-bg:var(--blue-300);  --ev-fg:var(--blue-700); --ev-edge:var(--blue-500); }
+.kk-event--gold { --ev-bg:var(--gold-300);  --ev-fg:var(--gold-600); --ev-edge:var(--gold-500); }
+.kk-event--coral{ --ev-bg:var(--coral-300); --ev-fg:var(--coral-700); --ev-edge:var(--coral-500); }
+.kk-event__type{ display:inline-block; font-family:var(--font-mono); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; padding:3px 8px; border-radius:999px; white-space:nowrap;
+  background:var(--ev-bg); color:var(--ev-fg); border:1.5px solid var(--ev-edge); }
+.kk-event__when{ font-family:var(--font-mono); font-size:13px; line-height:1.5; color:var(--ink-500); margin:8px 0 12px; }
+.kk-event__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:auto; }
+.kk-event__past-label{ display:none; }
+
+/* Past: greyed out and quieter. The type colour fades with it, and the
+   calendar/sign-up buttons go, since there is nothing left to add or join. */
+.kk-event--past{ filter:grayscale(1); opacity:.6; box-shadow:none; background:var(--paper-100); }
+.kk-event--past .kk-event__actions{ display:none; }
+.kk-event--past .kk-event__past-label{ display:block; font-family:var(--font-mono); font-size:12px;
+  color:var(--ink-400); text-transform:uppercase; letter-spacing:.06em; }
+
+.kk-event-empty{ font:var(--type-body); color:var(--ink-500); margin:0; }
+
+.kk-event-legend{ list-style:none; padding:0; margin:28px 0 0; display:flex; flex-wrap:wrap; gap:10px 22px;
+  font-size:14px; color:var(--ink-500); }
+.kk-event-legend__item{ display:flex; align-items:center; gap:8px; }
+
+/* --- Research ------------------------------------------------------------ */
+.kk-research{ display:flex; flex-direction:column; }
+.kk-research__actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+
+/* --- Partner tiers ------------------------------------------------------- */
+.kk-tier{ display:flex; flex-direction:column; }
+.kk-tier__name{ font:var(--weight-bold) 24px/1.1 var(--font-display); color:var(--ink-900); margin:0 0 6px; }
+.kk-tier__who{ font-size:15px; color:var(--ink-500); margin:0 0 14px; }
+.kk-tier__list{ margin:0; padding-left:1.1em; font-size:15px; line-height:1.55; color:var(--ink-700); }
+.kk-tier__list li + li{ margin-top:4px; }
+.kk-tier--principal{ background:var(--lime-300); border-color:var(--ink-900); }
+.kk-tier--partner{ background:var(--surface-card); }
+.kk-tier--supporter{ background:var(--paper-100); }
+
+.kk-partner-tier__t{ font-family:var(--font-mono); font-size:12px; font-weight:400; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-400); margin:36px 0 14px; }
+.kk-partner-tier__t:first-of-type{ margin-top:8px; }
+.kk-partner-grid{ display:grid; gap:18px; }
+.kk-partner-grid--principal{ grid-template-columns:1fr; }
+.kk-partner-grid--principal .kk-partner-card__logo{ height:72px; }
+.kk-partner-grid--supporter{ grid-template-columns:repeat(4,1fr); }
+.kk-partner-card--sm .kk-partner-card__logo{ height:36px; margin-bottom:12px; }
+.kk-partner-card--sm .kk-item__t{ font-size:17px; margin-bottom:4px; }
+@media (max-width: 700px){
+  .kk-partner-grid--supporter{ grid-template-columns:repeat(2,1fr); }
+}

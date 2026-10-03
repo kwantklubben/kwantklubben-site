@@ -1,0 +1,37 @@
+# ============================================================================
+#  PARTNERS — who supports the club, and at which tier.
+#
+#  tier    principal | partner | supporter      (see `tiers` at the bottom of
+#          partners/index.html for what each one means)
+#  name    company name
+#  role    one short line under the name, e.g. "Banking partner"
+#  url     their website
+#  logo    file in assets/logos/ — a transparent PNG or SVG, roughly square
+#
+#  Principal partners get the largest card and lead the homepage strip.
+#  Order within a tier is the order below.
+# ============================================================================
+
+- name: Jyske Bank
+  tier: partner
+  role: Banking partner
+  url: https://www.jyskebank.dk/
+  logo: jyske-bank-mark.png
+
+- name: Interactive Brokers
+  tier: partner
+  role: Brokerage partner
+  url: https://www.interactivebrokers.com/
+  logo: interactive-brokers-mark.png
+
+- name: DJØF
+  tier: supporter
+  role: Event partner
+  url: https://www.djoef.dk/
+  logo: djoef.png
+
+- name: Akademikernes A-kasse
+  tier: supporter
+  role: Event partner
+  url: https://www.aka.dk/
+  logo: akademikernes-aka-mark.png

@@ -59,34 +59,77 @@ description: 'Work with Kwant Klubben: talks, workshops, mentorship and co-desig
   </div>
 </section>
 
-<!-- ============ OUR PARTNERS ============ -->
-<section class="kk-band--paper" id="partners">
+<!-- ============ TIERS ============
+     What each tier means. Prices are not published here; they are in the
+     partner pack the board sends on request. -->
+<section class="kk-band--paper" id="tiers">
   <div class="kk-section kk-section--band">
-    <div class="kk-overline kk-overline--gap">03 / Our partners</div>
-    <h2 class="kk-band__title--gap">Companies we work with.</h2>
-
+    <div class="kk-overline kk-overline--gap">03 / Partnership tiers</div>
+    <h2 class="kk-band__title--gap">Three ways to back the club.</h2>
     <div class="kk-projects-grid">
-      <a class="kk-card kk-card--pad-md kk-card--hover kk-card--link" href="https://www.jyskebank.dk/" target="_blank" rel="noopener">
-        <img class="kk-partner-card__logo" src="/assets/logos/jyske-bank-mark.png" alt="Jyske Bank">
-        <h3 class="kk-item__t">Jyske Bank</h3>
-        <p class="kk-prose__p--sm">Banking Partner</p>
-      </a>
-      <a class="kk-card kk-card--pad-md kk-card--hover kk-card--link" href="https://www.interactivebrokers.com/" target="_blank" rel="noopener">
-        <img class="kk-partner-card__logo" src="/assets/logos/interactive-brokers-mark.png" alt="Interactive Brokers">
-        <h3 class="kk-item__t">Interactive Brokers</h3>
-        <p class="kk-prose__p--sm">Brokerage Partner</p>
-      </a>
-      <a class="kk-card kk-card--pad-md kk-card--hover kk-card--link" href="https://www.djoef.dk/" target="_blank" rel="noopener">
-        <img class="kk-partner-card__logo" src="/assets/logos/djoef.png" alt="DJØF">
-        <h3 class="kk-item__t">DJØF</h3>
-        <p class="kk-prose__p--sm">Event Partner</p>
-      </a>
-      <a class="kk-card kk-card--pad-md kk-card--hover kk-card--link" href="https://www.aka.dk/" target="_blank" rel="noopener">
-        <img class="kk-partner-card__logo" src="/assets/logos/akademikernes-aka-mark.png" alt="Akademikernes A-kasse">
-        <h3 class="kk-item__t">Akademikernes A-kasse</h3>
-        <p class="kk-prose__p--sm">Event Partner</p>
-      </a>
+      <div class="kk-card kk-card--pad-md kk-tier kk-tier--principal">
+        <div class="kk-tier__name">Principal partner</div>
+        <p class="kk-tier__who">One per year. The club's main backer.</p>
+        <ul class="kk-tier__list">
+          <li>First and largest logo on the site and in every event deck</li>
+          <li>Your name on the workshop series ("… workshop, with X")</li>
+          <li>Two events a semester, co-designed with the board</li>
+          <li>A standing channel for your openings on the club Discord</li>
+          <li>Sector exclusivity: no competing principal partner</li>
+        </ul>
+      </div>
+      <div class="kk-card kk-card--pad-md kk-tier kk-tier--partner">
+        <div class="kk-tier__name">Partner</div>
+        <p class="kk-tier__who">Companies who want regular contact with members.</p>
+        <ul class="kk-tier__list">
+          <li>Logo on the site and in event decks</li>
+          <li>One event a semester: a talk, case or workshop</li>
+          <li>Openings shared on the club Discord</li>
+        </ul>
+      </div>
+      <div class="kk-card kk-card--pad-md kk-tier kk-tier--supporter">
+        <div class="kk-tier__name">Supporter</div>
+        <p class="kk-tier__who">Backing a single event, or giving in kind: data, software, a venue.</p>
+        <ul class="kk-tier__list">
+          <li>Logo on the site</li>
+          <li>Thanked at the events you support</li>
+        </ul>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ============ OUR PARTNERS ============
+     Rendered from _data/partners.yml — edit that file, not this one.
+     A tier with nobody in it is simply not shown. -->
+{% assign principal = site.data.partners | where: "tier", "principal" %}
+{% assign partners = site.data.partners | where: "tier", "partner" %}
+{% assign supporters = site.data.partners | where: "tier", "supporter" %}
+<section class="kk-band--paper-100-top" id="partners">
+  <div class="kk-section kk-section--band">
+    <div class="kk-overline kk-overline--gap">04 / Our partners</div>
+    <h2 class="kk-band__title--gap">Who backs the club.</h2>
+
+    {% if principal.size > 0 %}
+    <h3 class="kk-partner-tier__t">Principal partner</h3>
+    <div class="kk-partner-grid kk-partner-grid--principal">
+      {% for p in principal %}{% include partner-card.html %}{% endfor %}
+    </div>
+    {% endif %}
+
+    {% if partners.size > 0 %}
+    <h3 class="kk-partner-tier__t">Partners</h3>
+    <div class="kk-projects-grid">
+      {% for p in partners %}{% include partner-card.html %}{% endfor %}
+    </div>
+    {% endif %}
+
+    {% if supporters.size > 0 %}
+    <h3 class="kk-partner-tier__t">Supporters</h3>
+    <div class="kk-partner-grid kk-partner-grid--supporter">
+      {% for p in supporters %}{% include partner-card.html small=true %}{% endfor %}
+    </div>
+    {% endif %}
   </div>
 </section>
 
@@ -94,14 +137,14 @@ description: 'Work with Kwant Klubben: talks, workshops, mentorship and co-desig
 <section class="kk-band--ink" id="talk">
   <div class="kk-gridpaper kk-gridpaper--bare">
     <div class="kk-section kk-section--cta">
-      <div class="kk-overline kk-overline--on-ink kk-overline--gap">04 / Get in touch</div>
+      <div class="kk-overline kk-overline--on-ink kk-overline--gap">05 / Get in touch</div>
       <h2 class="kk-cta__title">Let's talk.</h2>
       <p class="kk-cta__lead">
-        Tell us what you have in mind and we'll tell you whether the club can deliver it.
+        Tell us what you have in mind and we'll tell you whether the club can deliver it. Ask for the partner pack for the details of each tier.
       </p>
       <div class="kk-btn-row">
-        <a class="kk-btn kk-btn--primary kk-btn--lg" href="mailto:kwantklubben@org.sdu.dk?subject=Kwant%20Klubben%20partnership">kwantklubben@org.sdu.dk</a>
-        <a class="kk-btn kk-btn--secondary kk-btn--lg" href="https://www.linkedin.com/company/kwant-klubben" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="kk-btn kk-btn--primary kk-btn--lg" href="mailto:{{ site.contact_email }}?subject=Kwant%20Klubben%20partnership">{{ site.contact_email }}</a>
+        <a class="kk-btn kk-btn--secondary kk-btn--lg" href="{{ site.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>
       </div>
     </div>
   </div>

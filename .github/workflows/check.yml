@@ -13,8 +13,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Layout invariants and site checks
-        run: python tools/check-site.py
+      - name: Layout invariants, data files and site checks
+        run: |
+          pip install --quiet pyyaml
+          python tools/check-site.py
 
   # GitHub Pages builds this site with Jekyll. If that build fails, Pages keeps
   # serving the LAST GOOD version — the site does not go down, it silently stops
@@ -47,7 +49,7 @@ jobs:
             grep -q '<!DOCTYPE html>'            "$f" || { echo "FAIL: $f has no doctype"; fail=1; }
             grep -q 'id="kk-nav-panel"'          "$f" || { echo "FAIL: $f has no nav"; fail=1; }
             grep -q 'kk-footer-word'             "$f" || { echo "FAIL: $f has no footer wordmark"; fail=1; }
-            grep -q 'family=Chewy'               "$f" || { echo "FAIL: $f lost the Chewy font"; fail=1; }
+            grep -q '/assets/fonts/fonts.css'    "$f" || { echo "FAIL: $f lost the font stylesheet"; fail=1; }
             grep -q '/js/kk-nav.js'              "$f" || { echo "FAIL: $f is missing the scripts block (kk-nav.js)"; fail=1; }
             grep -q '<main id="main">'           "$f" || { echo "FAIL: $f has no main"; fail=1; }
 
@@ -59,12 +61,17 @@ jobs:
             [ "$bytes" -gt 6000 ] || { echo "FAIL: $f is only $bytes bytes — content was dropped"; fail=1; }
           done
 
+          # the data files actually rendered into cards
+          grep -q 'data-kk-event-ends' _site/events/index.html || { echo "FAIL: no event cards rendered from _data/events.yml"; fail=1; }
+          grep -q 'kk-research'        _site/research/index.html || { echo "FAIL: no research cards rendered from _data/research.yml"; fail=1; }
+          grep -q 'kk-partner-card'    _site/partners/index.html || { echo "FAIL: no partner cards rendered from _data/partners.yml"; fail=1; }
+
           # the redirect stub is a static passthrough, not a laid-out page
           grep -q 'http-equiv="refresh"' _site/sponsors/index.html \
             || { echo "FAIL: sponsors redirect stub did not survive the build"; fail=1; }
 
           # repo furniture must not be published
-          for x in tools README.md EDITING.md docs; do
+          for x in tools README.md EDITING.md research/papers/README.txt; do
             [ -e "_site/$x" ] && { echo "FAIL: _site/$x was published — check _config.yml exclude"; fail=1; }
           done
 

@@ -1,188 +1,126 @@
 # Editing the site
 
-Everything here can be changed from github.com — click a file, click the pencil,
-commit. Nothing to install and nothing to run: GitHub Pages builds the site for
-you. A commit to `main` is live on kwantklubben.com about a minute later.
+Everything can be done on github.com: open the file, click the pencil, edit,
+commit. A commit to `main` is live on kwantklubben.com about a minute later.
 
-CI does two things on every push: runs `tools/check-site.py`, and builds the
-site the same way Pages does. If either fails, the site does **not** break — the
-last good version keeps serving — but your change will not go live until it
-passes. The failure message tells you what to fix and where.
+On every commit CI checks the site and builds it the way GitHub Pages does. If
+something is wrong, the live site does **not** break: the last good version stays
+up, and the red ✗ on the commit tells you which file and which line to fix.
 
 ---
 
-## The one-minute version
+## The three things you will actually do
 
-To change wording, find the page, find the section, edit the text between the
-tags. That is all.
+### Add an event: `_data/events.yml`
 
-```html
-<h1 class="kk-hero__title">
-  Randomness has a <span class="kk-accent">shape.</span>
-</h1>
+Copy an existing block, paste it, change the values:
+
+```yaml
+- name: "Workshop #2"
+  type: workshop          # workshop | company | talk | social
+  date: 2026-10-22
+  start: "16:00"          # Danish time, in quotes
+  end: "18:00"
+  location: U313, SDU Odense
+  summary: Backtesting without fooling yourself.
+  signup: https://...     # optional
 ```
 
-Change `Randomness has a` and `shape.` — leave the `class="..."` alone. The class
-is what makes it look right; the text is yours.
+That is all. The site sorts events by date, puts the next one in the banner at
+the top of every page, builds the "Add to calendar" link, and greys an event out
+once it is over. You never delete old events; they become the archive.
+
+The types and their colours are in `_data/event_types.yml`. Rename the labels
+there freely.
+
+### Publish a project: `_data/research.yml`
+
+1. If there is a paper, upload the PDF to `research/papers/` ("Add file" →
+   "Upload files"). Use a short name without spaces: `momentum-dk-2026.pdf`.
+2. Add a block to `_data/research.yml`:
+
+```yaml
+- title: Momentum in Danish equities
+  date: 2026-11-30
+  authors: Jane Doe, John Doe
+  note: >-
+    Does 12-1 momentum survive transaction costs on the C25? We tested it on
+    2005–2025 data. It does not: the edge disappears after 20 bps round-trip.
+  pdf: momentum-dk-2026.pdf     # optional
+  link: https://github.com/...  # optional: code or notebook
+  label: Negative result        # optional sticker
+```
+
+The note is the write-up on the site: two to four sentences covering the question,
+what you did and what you found. The newest three also appear on the homepage.
+
+### Add or move a partner: `_data/partners.yml`
+
+```yaml
+- name: Example Capital
+  tier: partner           # principal | partner | supporter
+  role: Event partner
+  url: https://example.com
+  logo: example-capital.png
+```
+
+Upload the logo to `assets/logos/` first: a transparent PNG, roughly square,
+at least 200px tall. Principal partners get the big card and lead the homepage
+strip. A tier with nobody in it is not shown.
 
 ---
 
-## Where the words live
+## Changing the words on a page
 
-Each page is split by big comment banners, e.g. `<!-- ===== HERO ===== -->`.
-Search for the banner name and you are in the right place. Line numbers below are
-approximate and shift as copy changes — the banner is the reliable landmark.
+Each page is one file: `index.html`, `about/index.html`, `events/index.html`,
+`research/index.html`, `partners/index.html`. Sections are marked with big
+comment banners like `<!-- ============ HERO ============ -->`. Find the
+banner, then change the text between the tags. Leave the `class="..."` alone,
+because the class is what makes it look right.
 
-### `index.html` — the landing page
-
-| Section | Line | What it is |
-|---|---|---|
-| `HERO` | 7 | Headline, the sentence under it, the two buttons, the volatility surface |
-| `THE LOOP` | 33 | "From a question to something real" — the three numbered steps |
-| `RESEARCH` | 60 | "Recent Papers" teaser card and "View All Research" link |
-| `JOIN` | 91 | "Bring a question" and the what-the-form-asks panel |
-
-### `about/index.html`
-
-| Section | Line | What it is |
-|---|---|---|
-| `PAGE HEAD` | 7 | "A club for people who want to know why" |
-| `01 WHAT IT IS` | 21 | "New, small, and building" |
-| `02 THE PROCESS` | 35 | The three process cards |
-| `03 AI` | 61 | "Fast tools, human ownership" |
-| `04 JOINING` | 75 | "All levels, genuinely" |
-| `JOIN` | 97 | Shared join band |
-
-### `research/index.html`
-
-| Section | Line | What it is |
-|---|---|---|
-| `PAGE HEAD` | 7 | "Published Research" |
-| `THE LIBRARY` | 18 | "01 / Published" and the single placeholder card |
-| `WHAT COUNTS` | 41 | "Strategies, tools, and falsified ideas" |
-| `JOIN` | 54 | "Come build a strategy" |
-
-### `partners/index.html`
-
-| Section | Line | What it is |
-|---|---|---|
-| `PAGE HEAD` | 7 | "Work with the klub" and the three offer cards |
-| `WHAT WE CAN OFFER` | 51 | "A new klub, said plainly" |
-| `GET IN TOUCH` | 66 | "Let's talk" |
-
-`sponsors/index.html` is a redirect stub to `/partners/`. The old URL is on
-LinkedIn, so it has to keep working. Do not delete it.
-
----
-
-## The nav, footer and head live in one file
-
-`_layouts/default.html` holds everything every page shares — the `<head>`, the
-nav, the footer, and the script tags. **There is one copy.** Change the nav there
-and all four pages change.
-
-GitHub Pages assembles the pages with Jekyll. You do not run anything; pushing is
-the build.
-
-Each page file is now just its own content, with a small header on top:
+The top of each page has a small header:
 
 ```
 ---
 layout: default
-title: 'About — Kwant Klubben'
-description: 'What the klub is, how a project runs, and how to join.'
+title: 'About - Kwant Klubben'
+description: 'One sentence for Google and link previews.'
 ---
-
-<section class="kk-band--paper">
-  ...only this page's content...
-</section>
 ```
 
-- `title` fills `<title>` — it is what shows in a browser tab and in Google.
-- `description` fills the meta description — the grey text under a search result.
-- `layout: default` picks `_layouts/default.html`. Do not change it.
+Keep the `---` lines. `title` is the browser tab and the search result.
 
-Keep the `---` lines. They are what tells Jekyll to wrap the page in the layout;
-without them the page is published as a bare fragment with no nav and no styling.
+## Links and the contact address
 
-**Do not add `.nojekyll` back.** It switches the build off, and every page would
-then show its raw `---` header as text.
+The join form, the Discord invite, GitHub, LinkedIn and the contact email are set
+**once**, in `_config.yml`. Change them there. Pages use them as
+`{{ site.join_url }}` and so on, and CI fails if one is hardcoded in a page.
 
----
+## Shared pieces
 
-## Things that will fail the check
+- `_layouts/default.html`: the head, event banner, nav and footer for every page.
+- `_includes/`: small reusable blocks (the dark join band, the event, research
+  and partner cards, the social icons).
+- `css/styles.css`: all styling. Colours are the variables at the top
+  (`--ink-*`, `--paper-*`, `--lime-*`, `--blue-*`, `--gold-*`, `--coral-*`).
 
-- **An inline `style="..."` in a page.** Add a class in `css/styles.css` instead.
-  173 of these were lifted out so the copy is findable; the guard exists so they
-  do not creep back one at a time.
-- **A page missing its `---` front matter**, or not setting `layout: default`.
-- **Two pages sharing a `<title>`.**
-- **`.nojekyll` reappearing**, or `_layouts/default.html` / `_config.yml` going
-  missing.
-- **Removing `&family=Chewy`** from the fonts URL — the giant `KWANT` footer
-  wordmark is set in it.
-- **Putting a `class` on `<footer>`.** A `.kk-footer` class selector out-specifies
-  the mobile `footer{display:block}` rule and drops the wordmark behind the text.
-  Style the element.
-- **Removing `hidden` from `#kk-nav-panel`.** The script is deferred, so without
-  it the mobile drawer renders open on a cold cache.
-- **An unbalanced `}` in the stylesheet.** CSS error recovery silently discards
-  the *next* rule, so the damage shows up somewhere else entirely. This actually
-  happened — it cost the "How it works" band its three-column layout for two
-  commits before anyone noticed.
-- **A nav link pointing at a page that does not exist.**
+## What fails the check, and why
 
-Run it yourself before pushing, if you have Python:
+`tools/check-site.py` runs in CI. It fails on:
 
-```
-python tools/check-site.py
-```
+- **A mistake in a `_data/*.yml` file:** a missing field, a date that is not
+  `YYYY-MM-DD`, a time without quotes, an event type that does not exist, a PDF or
+  logo that is not where the entry says. The message names the file and entry.
+- **A hardcoded join link, Discord invite or contact email** in a page.
+- **An inline `style="..."`.** Add a class to `css/styles.css` instead.
+- **A page without its `---` header**, or two pages with the same title.
+- **A `class` on `<footer>`**, or `hidden` removed from `#kk-nav-panel`. Both
+  broke the mobile layout once.
+- **An unbalanced `}` in the stylesheet.** CSS silently drops the next rule.
+- **A file in `assets/` that nothing uses.**
 
----
+## Previewing locally (optional)
 
-## Common edits
-
-**Change the application form link.** In `_layouts/default.html` for the nav
-button, and in `index.html` / `partners/index.html` for the in-page buttons.
-`check-site.py` fails if any of them disagree with the canonical URL.
-
-**Change the contact address or the nav links.** `_layouts/default.html`, once.
-
-**Add a real project.** Copy the `kk-card` block inside `THE LIBRARY` in
-`research/index.html`, drop the `kk-card--placeholder` class, and fill it in. The
-landing page carries its own teaser copy of the same card.
-
-**Change a colour.** Do not touch hexes in the markup. The palette is a block of
-CSS variables at the top of `css/styles.css` — `--ink-*`, `--paper-*`, `--lime-*`.
-Change it once there and it changes everywhere.
-
-**Change the hero visual.** The hero is the implied-volatility surface, drawn by
-`js/kk-volsurface.js` (a self-contained 3D wireframe — no WebGL). It renders on
-the landing page only and is inert elsewhere.
-
----
-
-## The class vocabulary
-
-You rarely need this — you are usually editing text between tags. But if you are
-adding a new block, reuse these rather than inventing styles.
-
-| Class | What it does |
-|---|---|
-| `kk-band--paper` / `--lime` / `--ink` / `--rule` | Full-width colour band a section sits on |
-| `kk-section` | The centred 1200px column. Pair with `kk-section--body`, `--pagehead`, `--band`, `--cta`, `--join` for vertical padding |
-| `kk-pagehead__title` / `kk-pagehead__lead` | The h1 and standfirst on an inner page |
-| `kk-band__title` / `kk-band__lead` | Section heading and its intro |
-| `kk-overline` | The small uppercase label above a heading. `--gap`, `--on-lime`, `--on-ink` position it |
-| `kk-prose__p` | Body paragraph. `--sm`, `--lg`, `--gap` are size and spacing variants |
-| `kk-card` | The bordered box. `--placeholder` makes it dashed |
-| `kk-badge` / `kk-tag` | The small pills. `kk-badge-row` / `kk-tag-row` lay them out |
-| `kk-btn` | Buttons. `--primary`, `--secondary`, `--sm`, `--lg`. `kk-btn-row` lays them out |
-| `kk-step__n` / `__t` / `__d` | The numbered steps in "How it works" |
-
-Every one is defined in `css/styles.css` under a commented group near the bottom.
-
-**Do not use `kk-badge--survived`, `kk-badge--killed`, `kk-stamp--survived` or
-`kk-stamp--killed`.** They exist because they came with the design system, but
-"survived / killed" verdict cards are excluded by the klub's brief — the site
-does not pass verdicts on research it has not published. Use `kk-badge--neutral`.
+You do not need to. Push to a branch and CI builds it. If you have Ruby:
+`gem install --user-install jekyll -v '~> 3.10' webrick`, then
+`sh tools/preview.sh` and open http://localhost:4000.
