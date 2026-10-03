@@ -8,19 +8,15 @@
 workshop:
   label: Workshop
   colour: lime
-  about: Hands-on session run by members. Bring a laptop.
 
 company:
   label: Company workshop
   colour: blue
-  about: Run with, or at, a company.
 
 talk:
   label: Talk
   colour: gold
-  about: A speaker, a presentation, or an intro to the club.
 
 social:
   label: Social
   colour: coral
-  about: No agenda. Meet the people.
