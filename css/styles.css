@@ -1052,9 +1052,6 @@ h2.kk-overline{ margin-top:0; font-weight:400; }
 
 .kk-event-empty{ font:var(--type-body); color:var(--ink-500); margin:0; }
 
-.kk-event-legend{ list-style:none; padding:0; margin:28px 0 0; display:flex; flex-wrap:wrap; gap:10px 22px;
-  font-size:14px; color:var(--ink-500); }
-.kk-event-legend__item{ display:flex; align-items:center; gap:8px; }
 
 /* --- Research ------------------------------------------------------------ */
 .kk-research{ display:flex; flex-direction:column; }
