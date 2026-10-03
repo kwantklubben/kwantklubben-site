@@ -15,7 +15,17 @@ exclude:
   - README.md
   - EDITING.md
   - .gitignore
-  - docs/
+  - research/papers/README.txt
 
 # _sketches/ and _sketches.html are gitignored anyway, but underscore paths are
 # excluded by Jekyll by default regardless, which is belt and braces.
+
+# ---------------------------------------------------------------------------
+# Links used across the site. Change them HERE, once — every page reads them
+# as {{ site.join_url }} etc. tools/check-site.py fails if a page hardcodes one.
+# ---------------------------------------------------------------------------
+join_url: https://forms.gle/P5Aw4ka85QUZiUmZ9
+discord_url: https://discord.gg/dgJhp6AACd
+github_url: https://github.com/kwantklubben
+linkedin_url: https://www.linkedin.com/company/kwant-klubben
+contact_email: kwantklubben@org.sdu.dk

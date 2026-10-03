@@ -1,0 +1,26 @@
+{% comment %}
+  One event card. `ev` is an entry from _data/events.yml.
+  data-ends lets js/kk-events.js grey the card out once the event is over;
+  without JavaScript every card still shows, in date order.
+  The calendar link is built here from the date and times, so nobody has to
+  hand-encode a Google Calendar URL. ctz pins it to Danish time.
+{% endcomment %}
+{% assign t = site.data.event_types[ev.type] %}
+{% assign d = ev.date | date: "%Y%m%d" %}
+{% capture cal %}https://calendar.google.com/calendar/render?action=TEMPLATE&text={{ ev.name | url_encode }}&dates={{ d }}T{{ ev.start | remove: ':' }}00/{{ d }}T{{ ev.end | remove: ':' }}00&ctz=Europe/Copenhagen&location={{ ev.location | url_encode }}&details={{ ev.summary | url_encode }}{% endcapture %}
+<article class="kk-card kk-card--pad-md kk-event kk-event--{{ t.colour | default: 'neutral' }}" data-kk-event-ends="{{ ev.date | date: '%Y-%m-%d' }} {{ ev.end }}">
+  <div class="kk-card__head">
+    <h3 class="kk-card__t">{{ ev.name }}</h3>
+    <span class="kk-event__type">{{ t.label | default: ev.type }}</span>
+  </div>
+  {% if ev.summary %}<p class="kk-card__d">{{ ev.summary }}</p>{% endif %}
+  <p class="kk-event__when">
+    <time datetime="{{ ev.date | date: '%Y-%m-%d' }}T{{ ev.start }}">{{ ev.date | date: "%A %-d %B %Y" }}</time><br>
+    {{ ev.start }}–{{ ev.end }} · {{ ev.location }}
+  </p>
+  <div class="kk-event__actions">
+    <a class="kk-btn kk-btn--secondary kk-btn--sm" href="{{ cal }}" target="_blank" rel="noopener">Add to calendar</a>
+    {% if ev.signup %}<a class="kk-btn kk-btn--primary kk-btn--sm" href="{{ ev.signup }}" target="_blank" rel="noopener">Sign up</a>{% endif %}
+  </div>
+  <span class="kk-event__past-label">Past event</span>
+</article>

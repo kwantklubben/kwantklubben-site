@@ -1,7 +1,7 @@
 ---
 layout: default
 title: 'Events - Kwant Klubben'
-description: 'Kwant Klubben events: intros, talks and workshops. Date, time, location and what to expect — everything the club puts on in one place.'
+description: 'Kwant Klubben events: workshops, talks, company workshops and socials. Date, time and place for everything the club puts on.'
 ---
 
 <!-- ============ PAGE HEAD ============ -->
@@ -11,40 +11,30 @@ description: 'Kwant Klubben events: intros, talks and workshops. Date, time, loc
     <p class="kk-pagehead__lead">
       What the club puts on. Upcoming events first, then everything that has already happened.
     </p>
+    <ul class="kk-event-legend" aria-label="Event types">
+      {% for t in site.data.event_types %}<li class="kk-event-legend__item kk-event--{{ t[1].colour }}"><span class="kk-event__type">{{ t[1].label }}</span> {{ t[1].about }}</li>
+      {% endfor %}
+    </ul>
   </div>
 </section>
 
-<!-- ============ THE EVENTS ============ -->
+<!-- ============ THE EVENTS ============
+     Rendered from _data/events.yml — edit that file, not this one.
+     js/kk-events.js moves events that are over into the Past grid. -->
+{% assign events = site.data.events | sort: "date" %}
 <section class="kk-band--paper" id="events">
   <div class="kk-section kk-section--list">
-    <div class="kk-overline kk-overline--gap-lg">01 / Upcoming &amp; past</div>
-    <div class="kk-projects-grid" data-kk-events>
-      <!-- Static empty-state: js/kk-events.js replaces it with real event cards
-           when /data/events.json has any. Kept as the honest no-events placeholder. -->
-      <div class="kk-card kk-card--pad-md">
-        <div class="kk-card__head">
-          <h2 class="kk-card__t">No events yet</h2>
-          <span class="kk-badge kk-badge--neutral">Check back soon</span>
-        </div>
-        <p class="kk-card__d">Events will appear here as they are announced.</p>
-        <div class="kk-card__foot">Kwant Klubben</div>
-      </div>
+    <h2 class="kk-overline kk-overline--gap-lg">Upcoming</h2>
+    <div class="kk-projects-grid" data-kk-events="upcoming">
+      {% for ev in events %}{% include event-card.html %}{% endfor %}
+    </div>
+    <p class="kk-event-empty" data-kk-events-empty hidden>Nothing scheduled right now. New events are announced on Discord first.</p>
+
+    <div data-kk-events-past-wrap hidden>
+      <h2 class="kk-overline kk-overline--gap-lg kk-overline--gap-top">Past</h2>
+      <div class="kk-projects-grid" data-kk-events="past"></div>
     </div>
   </div>
 </section>
 
-<!-- ============ JOIN ============ -->
-<section class="kk-band--ink" id="join">
-  <div class="kk-gridpaper kk-gridpaper--bare">
-    <div class="kk-section kk-section--cta">
-      <h2 class="kk-cta__title">Come to an event.</h2>
-      <p class="kk-cta__lead">
-        The easiest way to see whether the club is for you is to show up. Applications are open continuously to all students at SDU.
-      </p>
-      <div class="kk-btn-row">
-        <a class="kk-btn kk-btn--primary kk-btn--lg" href="https://forms.gle/P5Aw4ka85QUZiUmZ9" target="_blank" rel="noopener">Apply to join →</a>
-        <a class="kk-btn kk-btn--secondary kk-btn--lg" href="https://discord.gg/dgJhp6AACd" target="_blank" rel="noopener">Join the Discord</a>
-      </div>
-    </div>
-  </div>
-</section>
+{% include join-band.html title="Come to an event." lead="The easiest way to see whether the club is for you is to show up. Applications are open continuously to all students at SDU." %}

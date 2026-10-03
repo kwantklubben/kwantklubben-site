@@ -1,0 +1,22 @@
+{% comment %}
+  The dark "join" band at the foot of a page. One copy, used by every page:
+    include join-band.html title="Bring a question." lead="..."
+  big=true gives the slightly larger homepage version.
+{% endcomment %}
+{% if include.big %}{% assign v = "join" %}{% else %}{% assign v = "cta" %}{% endif %}
+<section class="kk-band--ink" id="join">
+  <div class="kk-gridpaper kk-gridpaper--bare">
+    <div class="kk-section kk-section--{{ v }}">
+      <div>
+        <h2 class="kk-{{ v }}__title">{{ include.title }}</h2>
+        <p class="kk-{{ v }}__lead">{{ include.lead }}</p>
+        <div class="kk-btn-row">
+          <a class="kk-btn kk-btn--primary kk-btn--lg" href="{{ site.join_url }}" target="_blank" rel="noopener">Apply to join →</a>
+          <a class="kk-btn kk-btn--secondary kk-btn--lg kk-btn--icon" href="{{ site.github_url }}" target="_blank" rel="noopener" aria-label="GitHub">{% include icon-github.svg size=22 %}</a>
+          <a class="kk-btn kk-btn--secondary kk-btn--lg kk-btn--icon" href="{{ site.discord_url }}" target="_blank" rel="noopener" aria-label="Discord">{% include icon-discord.svg size=22 %}</a>
+        </div>
+        <p class="kk-cta__note">We get in touch with everyone who applies. GitHub and Discord access is granted once membership is approved.</p>
+      </div>
+    </div>
+  </div>
+</section>

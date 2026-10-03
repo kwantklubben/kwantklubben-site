@@ -1,0 +1,31 @@
+# ============================================================================
+#  EVENTS — the only file you edit to add, change or remove an event.
+#
+#  To add one: copy a block below (from "- name:" down to the next one), paste
+#  it anywhere in the list, change the values, commit. Order does not matter;
+#  the site sorts by date and greys out events once they are over.
+#
+#  name       what it is called
+#  type       workshop | company | talk | social   (see _data/event_types.yml)
+#  date       YYYY-MM-DD
+#  start/end  HH:MM, Danish time, 24-hour clock, in quotes
+#  location   room and building
+#  summary    one or two sentences (optional)
+#  signup     link to a sign-up form or page (optional)
+# ============================================================================
+
+- name: "Workshop #1"
+  type: workshop
+  date: 2026-10-08
+  start: "16:00"
+  end: "18:00"
+  location: U313, SDU Odense
+  summary: The first workshop of the semester. Bring a laptop.
+
+- name: Intro event
+  type: talk
+  date: 2026-09-24
+  start: "16:30"
+  end: "18:00"
+  location: U313, SDU Odense
+  summary: An introduction to Kwant Klubben, the student quantitative finance club at SDU.

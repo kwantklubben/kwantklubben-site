@@ -1,0 +1,6 @@
+{% comment %} One partner. `p` is an entry from _data/partners.yml. {% endcomment %}
+<a class="kk-card kk-card--pad-md kk-card--hover kk-card--link kk-partner-card{% if include.small %} kk-partner-card--sm{% endif %}" href="{{ p.url }}" target="_blank" rel="noopener">
+  <img class="kk-partner-card__logo" src="/assets/logos/{{ p.logo }}" alt="{{ p.name }}">
+  <h4 class="kk-item__t">{{ p.name }}</h4>
+  {% if p.role %}<p class="kk-prose__p--sm">{{ p.role }}</p>{% endif %}
+</a>

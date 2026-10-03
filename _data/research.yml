@@ -1,0 +1,28 @@
+# ============================================================================
+#  RESEARCH — the only file you edit to publish a project on the site.
+#
+#  To publish: copy a block, fill it in, commit. If there is a paper, upload
+#  the PDF to research/papers/ (on github.com: open that folder, "Add file" ->
+#  "Upload files") and put its file name in `pdf`.
+#
+#  The newest three (by date) also appear on the homepage.
+#
+#  title     project name
+#  date      YYYY-MM-DD it was published
+#  authors   who did it (optional)
+#  note      2–4 sentences: the question, what you did, what you found.
+#            Negative results are welcome — say what did NOT work.
+#  pdf       file name in research/papers/, e.g. momentum-dk.pdf (optional)
+#  link      code, notebook or live site (optional)
+#  label     a short sticker on the card, e.g. "Flagship" or "Negative result"
+#            (optional)
+# ============================================================================
+
+- title: Kwant Atlas
+  date: 2026-09-12
+  authors: Kwant Klubben
+  note: >-
+    A knowledge map built around eight disciplines of quantitative finance.
+    Every topic goes from intuition to derivation, working code and failure modes.
+  link: https://atlas.kwantklubben.com
+  label: Flagship

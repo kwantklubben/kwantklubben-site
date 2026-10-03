@@ -1,0 +1,15 @@
+{% comment %} One research note. `r` is an entry from _data/research.yml. {% endcomment %}
+<article class="kk-card kk-card--pad-md kk-research">
+  <div class="kk-card__head">
+    <h3 class="kk-card__t">{{ r.title }}</h3>
+    {% if r.label %}<span class="kk-stamp kk-stamp--sm {% if r.label == 'Flagship' %}kk-stamp--flagship{% else %}kk-stamp--neutral{% endif %}">{{ r.label }}</span>{% endif %}
+  </div>
+  <p class="kk-card__d">{{ r.note }}</p>
+  <div class="kk-card__foot">{{ r.date | date: "%-d %B %Y" }}{% if r.authors %} · {{ r.authors }}{% endif %}</div>
+  {% if r.pdf or r.link %}
+  <div class="kk-research__actions">
+    {% if r.pdf %}<a class="kk-btn kk-btn--primary kk-btn--sm" href="/research/papers/{{ r.pdf }}" target="_blank" rel="noopener">Read the paper (PDF)</a>{% endif %}
+    {% if r.link %}<a class="kk-btn kk-btn--secondary kk-btn--sm" href="{{ r.link }}" target="_blank" rel="noopener">{% if r.pdf %}Code{% else %}Open project{% endif %} →</a>{% endif %}
+  </div>
+  {% endif %}
+</article>
