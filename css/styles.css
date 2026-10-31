@@ -1,9 +1,9 @@
 /* ===========================================================================
    Kwant Klubben — bundled stylesheet for the static recruiting site.
-   Single file = one HTTP request. Sourced verbatim from the club's design
-   system (D:\local-repos\kwantklubben\kwantklubben-main\design-system\),
-   concatenated here so this repo has no build step. Re-sync against that source
-   if the brand system changes; each block below names its origin file.
+   Single file = one HTTP request. Copied from the club's design system
+   (kwantklubben-design/design-system/), concatenated here so this repo has no
+   build step. Not verbatim: minor drift, e.g. --lime-700 (see its comment).
+   Re-sync if the brand system changes; each block below names its origin file.
 
    FONTS: the brand faces (Space Grotesk, Space Mono, Chewy) are vendored
    locally in assets/fonts/fonts.css — NOT pulled from a CDN. If you re-sync

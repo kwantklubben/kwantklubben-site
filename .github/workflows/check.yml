@@ -2,20 +2,23 @@ name: check
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
 
+# Runner pinned on purpose: ubuntu-latest is moving to 26.04 and this workflow
+# has not been run there. To move, change both runs-on lines in a PR and check
+# that it stays green.
 jobs:
   check-site:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Layout invariants, data files and site checks
         run: |
-          pip install --quiet pyyaml
+          pip install --quiet pyyaml==6.0.3
           python tools/check-site.py
 
   # GitHub Pages builds this site with Jekyll. If that build fails, Pages keeps
@@ -23,9 +26,9 @@ jobs:
   # updating, and you find out by noticing your change never appeared. Building
   # here with the same action Pages uses turns that into a red PR instead.
   build-jekyll:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/jekyll-build-pages@v1
         with:
           source: ./
